@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹理中轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            height: 120vh;
+        }
+
+        html {
+            font-size: 1.27vw;
+        }
+
+        .topset {
+            position: fixed;
+            width: 100vw;
+            z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            z-index: 999;
+        }
+
+        /* button */
+        #categories {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #categories button {
+            font-size: 1rem;
+            background-color: transparent;
+            color: black;
+            border: none;
+            padding: 1rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            /* 平滑过渡效果 */
+        }
+
+        #categories button:hover {
+            background-color: red;
+            color: white;
+        }
+
+        #categories button.active {
+            background-color: red;
+            color: white;
+        }
+
+        .gallery-container {
+            max-width: 100vw;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 11rem);
+            gap: 1.3rem;
+            justify-content: center;
+            z-index: -2;
+            margin-top: 1rem;
+        }
+
+        .image-container {
+            display: flex;
+            width: 10rem;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        /*-------悬停列表图片某个后-------*/
+        .image-item {
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        /* 给所有以 -hover.png 结尾的图片源应用特殊样式 */
+        .image-item[src$="-hover.png"] {
+            width: 10rem;
+            position: absolute;
+            transform: scale(1.17);
+            transition: transform 0.6s ease;
+            z-index: 200;
+        }
+
+        .info {
+            /*图片下文字容器*/
+            margin-top: 0.5rem;
+            width: 10rem;
+        }
+
+        .info h3 {
+            /*纹样名称*/
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        .info p {
+            /*number*/
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .details {
+            /*详情*/
+            text-align: right;
+            padding-bottom: 0.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 0.1rem solid #000;
+        }
+
+        .details a {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* ----------------侧拉导航---------------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -12rem;
+            width: 12rem;
+            height: 100%;
+            background-color: rgba(253, 20, 50, 1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            left: -1.4rem;
+            top: 5.1rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            width: 5.5rem;
+        }
+
+        .menu-item {
+            text-decoration: none;
+            color: white;
+            /* 文字改为白色 */
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* 半透明白色悬停效果 */
+        }
+
+        /* 添加遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* @media (max-width: 768px) {
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 20px;
+        gap: 20px;
+      }
+
+      #categories button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    } */
+    </style>
+</head>
+
+<body>
+    <!-- 导航 -->
+    <div class="topset">
+        <img style="height: 7rem;margin-left: 2rem;" src="/image/right-logo.png" alt="logo">
+        <img id="toggleSidebar" style="height: 1rem;margin: 2rem;cursor: pointer;" src="/image/tab.png" alt="logo">
+    </div>
+
+    <!-- 侧边导航栏 -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeSidebar"><img style="width: 3rem;" src="/image/btn-close.png"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu">
+                <img style="width: 7rem;" src="/image/tab-login.png">
+                <img style="width: 8rem;" src="/image/line.png">
+                <a class="sidebar-menu" href="/menu/motifsAI.html" target="_blank"><img src="/image/tab-AI.png"></a>
+                <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-guide.png"></a>
+                <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-online.png"></a>
+                <a class="sidebar-menu" href="/menu/contact.html" target="_blank"><img src="/image/tab-contact.png"></a>
+                <a class="sidebar-menu" href="/menu/photography.html" target="_blank"><img
+                        src="/image/tab-photo.png"></a>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 100vw;z-index: 1;margin-bottom: 2rem;">
+        <!-- 留白 -->
+        <div style="height: 7rem;width: 100vw"></div>
+        <!-- 标题 -->
+        <div style="display: flex;justify-content: center">
+            <img style="height: 3.5rem;" src="/image/title-cihui.png" alt="">
+        </div>
+        <!-- 留白 -->
+        <div style="height: 3rem;width: 100vw"></div>
+        <!-- 电梯 -->
+        <div id="categories">
+            <button onclick="showGallery('全部')" class="active">全部</button>
+            <button onclick="showGallery('卷草纹')">卷草纹</button>
+            <button onclick="showGallery('缠枝纹')">缠枝纹</button>
+            <button onclick="showGallery('花篮纹')">花篮纹</button>
+            <button onclick="showGallery('蕉叶纹')">蕉叶纹</button>
+            <button onclick="showGallery('连福纹')">连福纹</button>
+            <button onclick="showGallery('皮球花纹')">皮球花纹</button>
+            <button onclick="showGallery('如意云头纹')">如意云头纹</button>
+        </div>
+    </div>
+
+    <!-- 留白1 -->
+    <!-- <div style="position: fixed;height: 3rem;width: 100vw;z-index: 0;background-color: aquamarine;"></div> -->
+    <!-- 留白2 -->
+    <!-- <div style="height: 3rem;width: 100vw;background-color: beige;"></div> -->
+    <!-- 图片数组 -->
+    <div id="gallery-container" class="gallery-container"></div>
+
+    <script>
+        // 定义图片数据
+        const galleryData = {
+            '全部': [
+                { image: '/category/CiHui/img2/1.png', title: '工字云纹', number: '01', details: '详情', hoverImage: '/category/CiHui/img2/1-hover.png', detailLink: '/category/CiHui/detail/page1.html' },
+                { image: '/category/CiHui/img2/2.png', title: '皮球花纹', number: '02', details: '详情', hoverImage: '/category/CiHui/img2/2-hover.png', detailLink: '/category/CiHui/detail/page2.html' },
+                { image: '/category/CiHui/img2/3.png', title: '蕉叶纹', number: '03', details: '详情', hoverImage: '/category/CiHui/img2/3-hover.png', detailLink: '/category/CiHui/detail/page3.html' },
+                { image: '/category/CiHui/img2/4.png', title: '蕉叶纹', number: '04', details: '详情', hoverImage: '/category/CiHui/img2/4-hover.png', detailLink: '/category/CiHui/detail/page4.html' },
+                { image: '/category/CiHui/img2/5.png', title: '花篮纹', number: '05', details: '详情', hoverImage: '/category/CiHui/img2/5-hover.png', detailLink: '/category/CiHui/detail/page5.html' },
+                { image: '/category/CiHui/img2/6.png', title: '清康熙五彩', number: '06', details: '详情', hoverImage: '/category/CiHui/img2/6-hover.png', detailLink: '/category/CiHui/detail/page6.html' },
+                { image: '/category/CiHui/img2/7.png', title: '花篮纹', number: '07', details: '详情', hoverImage: '/category/CiHui/img2/7-hover.png', detailLink: '/category/CiHui/detail/page7.html' },
+                { image: '/category/CiHui/img2/8.png', title: '梅花纹', number: '08', details: '详情', hoverImage: '/category/CiHui/img2/8-hover.png', detailLink: '/category/CiHui/detail/page8.html' },
+                { image: '/category/CiHui/img2/9.png', title: '缠枝纹', number: '09', details: '详情', hoverImage: '/category/CiHui/img2/9-hover.png', detailLink: '/category/CiHui/detail/page9.html' },
+                { image: '/category/CiHui/img2/10.png', title: '缠枝纹', number: '10', details: '详情', hoverImage: '/category/CiHui/img2/10-hover.png', detailLink: '/category/CiHui/detail/page10.html' },
+                { image: '/category/CiHui/img2/11.png', title: '缠枝纹', number: '11', details: '详情', hoverImage: '/category/CiHui/img2/11-hover.png', detailLink: '/category/CiHui/detail/page11.html' },
+                { image: '/category/CiHui/img2/12.png', title: '缠枝纹', number: '12', details: '详情', hoverImage: '/category/CiHui/img2/12-hover.png', detailLink: '/category/CiHui/detail/page12.html' },
+                { image: '/category/CiHui/img2/13.png', title: '皮球花纹', number: '13', details: '详情', hoverImage: '/category/CiHui/img2/13-hover.png', detailLink: '/category/CiHui/detail/page13.html' },
+                { image: '/category/CiHui/img2/14.png', title: '皮球花纹', number: '14', details: '详情', hoverImage: '/category/CiHui/img2/14-hover.png', detailLink: '/category/CiHui/detail/page14.html' },
+                { image: '/category/CiHui/img2/15.png', title: '花篮纹', number: '15', details: '详情', hoverImage: '/category/CiHui/img2/15-hover.png', detailLink: '/category/CiHui/detail/page15.html' },
+                { image: '/category/CiHui/img2/16.png', title: '如意云头纹', number: '16', details: '详情', hoverImage: '/category/CiHui/img2/16-hover.png', detailLink: '/category/CiHui/detail/page16.html' },
+                { image: '/category/CiHui/img2/17.png', title: '花篮纹', number: '17', details: '详情', hoverImage: '/category/CiHui/img2/17-hover.png', detailLink: '/category/CiHui/detail/page17.html' },
+                { image: '/category/CiHui/img2/18.png', title: '卷草纹', number: '18', details: '详情', hoverImage: '/category/CiHui/img2/18-hover.png', detailLink: '/category/CiHui/detail/page18.html' },
+                { image: '/category/CiHui/img2/19.png', title: '花篮纹', number: '19', details: '详情', hoverImage: '/category/CiHui/img2/19-hover.png', detailLink: '/category/CiHui/detail/page19.html' },
+                { image: '/category/CiHui/img2/20.png', title: '连福纹', number: '20', details: '详情', hoverImage: '/category/CiHui/img2/20-hover.png', detailLink: '/category/CiHui/detail/page20.html' },
+                { image: '/category/CiHui/img2/21.png', title: '花篮纹', number: '21', details: '详情', hoverImage: '/category/CiHui/img2/21-hover.png', detailLink: '/category/CiHui/detail/page21.html' },
+            ],
+            '卷草纹': [
+                { image: '/category/CiHui/img2/18.png', title: '卷草纹', number: '18', details: '详情', hoverImage: '/category/CiHui/img2/18-hover.png', detailLink: '/category/CiHui/detail/page18.html' },
+            ],
+            '缠枝纹': [
+                { image: '/category/CiHui/img2/9.png', title: '缠枝纹', number: '09', details: '详情', hoverImage: '/category/CiHui/img2/9-hover.png', detailLink: '/category/CiHui/detail/page9.html' },
+                { image: '/category/CiHui/img2/10.png', title: '缠枝纹', number: '10', details: '详情', hoverImage: '/category/CiHui/img2/10-hover.png', detailLink: '/category/CiHui/detail/page10.html' },
+                { image: '/category/CiHui/img2/11.png', title: '缠枝纹', number: '11', details: '详情', hoverImage: '/category/CiHui/img2/11-hover.png', detailLink: '/category/CiHui/detail/page11.html' },
+                { image: '/category/CiHui/img2/12.png', title: '缠枝纹', number: '12', details: '详情', hoverImage: '/category/CiHui/img2/12-hover.png', detailLink: '/category/CiHui/detail/page12.html' },
+            ],
+            '花篮纹': [
+                { image: '/category/CiHui/img2/5.png', title: '花篮纹', number: '05', details: '详情', hoverImage: '/category/CiHui/img2/5-hover.png', detailLink: '/category/CiHui/detail/page5.html' },
+                { image: '/category/CiHui/img2/6.png', title: '清康熙五彩', number: '06', details: '详情', hoverImage: '/category/CiHui/img2/6-hover.png', detailLink: '/category/CiHui/detail/page6.html' },
+                { image: '/category/CiHui/img2/7.png', title: '花篮纹', number: '07', details: '详情', hoverImage: '/category/CiHui/img2/7-hover.png', detailLink: '/category/CiHui/detail/page7.html' },
+                { image: '/category/CiHui/img2/15.png', title: '花篮纹', number: '15', details: '详情', hoverImage: '/category/CiHui/img2/15-hover.png', detailLink: '/category/CiHui/detail/page15.html' },
+                { image: '/category/CiHui/img2/17.png', title: '花篮纹', number: '17', details: '详情', hoverImage: '/category/CiHui/img2/17-hover.png', detailLink: '/category/CiHui/detail/page17.html' },
+                { image: '/category/CiHui/img2/19.png', title: '花篮纹', number: '19', details: '详情', hoverImage: '/category/CiHui/img2/19-hover.png', detailLink: '/category/CiHui/detail/page19.html' },
+                { image: '/category/CiHui/img2/21.png', title: '花篮纹', number: '21', details: '详情', hoverImage: '/category/CiHui/img2/21-hover.png', detailLink: '/category/CiHui/detail/page21.html' },
+            ],
+            '蕉叶纹': [
+                { image: '/category/CiHui/img2/3.png', title: '蕉叶纹', number: '03', details: '详情', hoverImage: '/category/CiHui/img2/3-hover.png', detailLink: '/category/CiHui/detail/page3.html' },
+                { image: '/category/CiHui/img2/4.png', title: '蕉叶纹', number: '04', details: '详情', hoverImage: '/category/CiHui/img2/4-hover.png', detailLink: '/category/CiHui/detail/page4.html' },
+            ],
+            '连福纹': [
+                { image: '/category/CiHui/img2/20.png', title: '连福纹', number: '20', details: '详情', hoverImage: '/category/CiHui/img2/20-hover.png', detailLink: '/category/CiHui/detail/page20.html' },
+            ],
+            '皮球花纹': [
+                { image: '/category/CiHui/img2/2.png', title: '皮球花纹', number: '02', details: '详情', hoverImage: '/category/CiHui/img2/2-hover.png', detailLink: '/category/CiHui/detail/page2.html' },
+                { image: '/category/CiHui/img2/13.png', title: '皮球花纹', number: '13', details: '详情', hoverImage: '/category/CiHui/img2/13-hover.png', detailLink: '/category/CiHui/detail/page13.html' },
+                { image: '/category/CiHui/img2/14.png', title: '皮球花纹', number: '14', details: '详情', hoverImage: '/category/CiHui/img2/14-hover.png', detailLink: '/category/CiHui/detail/page14.html' },
+            ],
+            '如意云头纹': [
+                { image: '/category/CiHui/img2/1.png', title: '工字云纹', number: '01', details: '详情', hoverImage: '/category/CiHui/img2/1-hover.png', detailLink: '/category/CiHui/detail/page1.html' },
+                { image: '/category/CiHui/img2/8.png', title: '梅花纹', number: '08', details: '详情', hoverImage: '/category/CiHui/img2/8-hover.png', detailLink: '/category/CiHui/detail/page8.html' },
+                { image: '/category/CiHui/img2/16.png', title: '如意云头纹', number: '16', details: '详情', hoverImage: '/category/CiHui/img2/16-hover.png', detailLink: '/category/CiHui/detail/page16.html' },
+            ],
+        };
+
+        // 显示画廊函数
+        function showGallery(category) {
+            const buttons = document.querySelectorAll('#categories button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent === category) {
+                    button.classList.add('active');
+                }
+            });
+
+            const container = document.getElementById('gallery-container');
+            const data = galleryData[category] || [];
+
+            container.innerHTML = '';
+
+            data.forEach((item, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <div class="image-container">
+                        <img class="image-item" src="${item.image}" alt="${item.title}" loading="lazy" onmouseover="this.src='${item.hoverImage}'" onmouseout="this.src='${item.image}'" onclick="window.location.href='${item.detailLink}'">
+                    </div>
+                    <div class="info">
+                        <h3>${item.title}</h3>
+                        <p>${item.number}</p>
+                        <div class="details"><a href="${item.detailLink}">${item.details}</a></div>
+                    </div>
+                `;
+
+                container.appendChild(galleryItem);
+            });
+        }
+
+        // 页面加载时显示默认类别
+        window.onload = function () {
+            showGallery('全部');
+        };
+
+        // ------------------------------------侧拉导航------------------------------------
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+            const body = document.body;
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+            // 打开侧边栏
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            });
+            // 关闭侧边栏的函数
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+            // 点击关闭按钮
+            closeBtn.addEventListener('click', closeSidebar);
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', closeSidebar);
+            // ESC键关闭
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

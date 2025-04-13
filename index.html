@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹理中轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            height: 120vh;
+        }
+
+        html {
+            font-size: 1.27vw;
+        }
+
+        .title-block {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 19;
+        }
+
+        .title-block.scrolled {
+            border-radius: 0.7rem;
+            margin: 1.5rem 1rem 0 1rem;
+            width: calc(100% - 3rem);
+        }
+
+        .top-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-top: 0.2rem;
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+
+        .list-container {
+            display: flex;
+            width: 25vw;
+            z-index: 20;
+        }
+
+        .red-block-container {
+            position: fixed;
+            width: 100vw;
+            top: 20rem;
+            z-index: 9;
+            transition: all 0.3s ease;
+        }
+
+        .red-block-container.scrolled {
+            height: 100vh;
+            top: 0;
+            z-index: 9;
+        }
+
+        .red-block {
+            width: 24.6%;
+            height: 100%;
+            opacity: 0;
+            z-index: 9;
+            object-fit: cover;
+        }
+
+        .red-block:hover {
+            width: 24.6%;
+            height: 100%;
+            opacity: 1;
+            z-index: 9;
+            object-fit: cover;
+            transition: all 0.8s ease;
+        }
+
+        .image-container {
+            position: fixed;
+            justify-content: center;
+            top: 20rem;
+            width: 100vw;
+            height: calc(100vh - 5rem);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background-color: white;
+            z-index: -5;
+        }
+
+        .image-container.scrolled {
+            height: 100vh;
+            top: 0;
+            z-index: -5;
+        }
+
+        .background-image {
+            width: 24.6%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -4;
+        }
+
+        .intro-block {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .main-LOGO {
+            display: flex;
+            justify-content: center;
+        }
+
+        .mini-logo {
+            display: none;
+        }
+
+        .mini-logo.scrolled {
+            display: block;
+            height: 2rem;
+            margin-right: 2rem;
+        }
+
+        .number-container {
+            margin-top: 6rem;
+            width: 100vw;
+            display: flex;
+            z-index: 7;
+        }
+
+        .number {
+            display: flex;
+            justify-content: center;
+            width: 25vw;
+            z-index: 8;
+        }
+
+        .arrow {
+            height: 3rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .arrow:hover {
+            transform: scale(1.2);
+        }
+
+        /* 滚动后的样式 */
+        .flex-change.scrolled {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ----------------侧拉导航---------------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -12rem;
+            width: 12rem;
+            height: 100%;
+            background-color: rgba(253, 20, 50, 1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position:absolute;
+            left:-1.4rem;
+            top:5.1rem;
+            cursor: pointer;
+        }
+
+        /* .close-btn:hover {
+            opacity: 0.8;
+        } */
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            width: 5.5rem;
+        }
+
+        .menu-item {
+            text-decoration: none;
+            color: white;
+            /* 文字改为白色 */
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* 半透明白色悬停效果 */
+        }
+
+        /* 添加遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media screen and (width: 1920px) and (height: 1080px) {
+            .intro-block {
+                bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="">
+
+        <!-- 导航栏 -->
+        <div class="title-block">
+            <div class="top-container">
+                <div>
+                    <img style="height: 2rem;margin-right: 2rem;margin-left: 1rem;" src="/image/logo1.png" alt="DIV Lab">
+                    <img style="height: 2rem;" src="/image/logo2.png" alt="HCCD">
+                </div>
+                <div class="flex-change">
+                    <img class="mini-logo" src="/image/mimiLOGO.png" alt="LOGO">
+                    <img id="toggleSidebar" style="height: 1rem;margin-top: 0.5rem;margin-right: 1rem;cursor: pointer;" src="/image/tab.png" alt="tab">
+                </div>
+            </div>
+        </div>
+
+        <!-- 侧边导航栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="close-btn" id="closeSidebar"><img style="width: 3rem;" src="/image/btn-close.png"></div>
+            <div class="sidebar-content">
+                <div class="sidebar-menu">
+                    <img style="width: 7rem;" src="/image/tab-login.png">
+                    <img style="width: 8rem;" src="/image/line.png">
+                    <a class="sidebar-menu" href="/menu/motifsAI.html" target="_blank"><img src="/image/tab-AI.png"></a>
+                    <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-guide.png"></a>
+                    <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-online.png"></a>
+                    <a class="sidebar-menu" href="/menu/contact.html" target="_blank"><img src="/image/tab-contact.png"></a>
+                    <a class="sidebar-menu" href="/menu/photography.html" target="_blank"><img src="/image/tab-photo.png"></a> 
+                </div>
+            </div>
+        </div>
+
+        <!-- 纹理中轴中心LOGO-->
+        <div class="main-LOGO">
+            <img style="height: 7.5rem;margin-top: 7rem;margin-bottom: 7rem;z-index: -10;" src="/image/LOGO.png"
+                alt="LOGO">
+        </div>
+
+        <!-- 数字 -->
+        <div class="number-container">
+            <div class="number"><img style="height: 9rem;" src="/image/1.png"></div>
+            <div class="number"><img style="height: 9rem;" src="/image/2.png"></div>
+            <div class="number"><img style="height: 9rem;" src="/image/3.png"></div>
+            <div class="number"><img style="height: 9rem;" src="/image/4.png"></div>
+        </div>
+
+        <!-- hover红色块 -->
+        <div class="red-block-container">
+            <img class="red-block" src="/image/hxch-hover.png" alt="image">
+            <img class="red-block" src="/image/chuang-hover.png" alt="image">
+            <img class="red-block" src="/image/lianpu-hover.png" alt="image">
+            <img class="red-block" src="/image/chuang-hover.png" alt="image">
+        </div>
+
+        <!-- 底层大图4张 -->
+        <div class="image-container">
+            <img class="background-image" src="/image/image1.png" alt="image">
+            <img class="background-image" src="/image/image2.png" alt="image">
+            <img class="background-image" src="/image/image3.png" alt="image">
+            <img class="background-image" src="/image/image4.png" alt="image">
+        </div>
+
+        <!-- 底部列表-->
+        <div class="intro-block">
+            <div class="list-container">
+                <div style="display: flex;gap: 6.5rem;z-index: 8;">
+                    <img style="height: 8.5rem;padding-left: 1.8rem;" src="/image/hxch.png" alt="image">
+                    <div><a href="/category/Hexicaihua/hxch.html"><img class="arrow" src="/image/arrow.png" alt="arrow"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-container">
+                <div style="display: flex;gap: 9rem;z-index: 8;">
+                    <img style="height: 8.5rem;padding-left: 1.8rem;" src="/image/ch.png" alt="hxch">
+                    <div><a href="/category/CiHui/cihui.html"><img class="arrow" src="/image/arrow.png" alt="arrow"></a></div>
+                </div>
+            </div>
+
+            <div class="list-container">
+                <div style="display: flex;gap: 6.5rem;z-index: 8;">
+                    <img style="height: 8.5rem;padding-left: 1.8rem;" src="/image/jjlp.png" alt="image">
+                    <div><a href="/category/Lianpu/Lianpu.html"><img class="arrow" src="/image/arrow.png" alt="arrow"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-container">
+                <div style="display: flex;gap: 9rem;z-index: 8;">
+                    <img style="height: 8.5rem;padding-left: 1.8rem;" src="/image/chuang.png" alt="hxch">
+                    <div><a href="/category/Chuang/chuang.html"><img class="arrow" src="/image/arrow.png" alt="arrow"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let lastScrollPosition = 0; // 记录上一次滚动位置
+
+        window.addEventListener('scroll', () => {
+            const titleBlock = document.querySelector('.title-block');
+            const imageContainer = document.querySelector('.image-container');
+            const redblockContainer = document.querySelector('.red-block-container');
+            const mimiLOGO = document.querySelector('.mini-logo');
+            const flexChange = document.querySelector('.flex-change');
+            const currentScrollPosition = window.scrollY;
+
+            if (currentScrollPosition > lastScrollPosition) {
+                // 向下滚动
+                titleBlock.classList.add('scrolled');
+                imageContainer.classList.add('scrolled');
+                mimiLOGO.classList.add('scrolled');
+                flexChange.classList.add('scrolled');
+                redblockContainer.classList.add('scrolled');
+            } else {
+                // 向上滚动
+                titleBlock.classList.remove('scrolled');
+                imageContainer.classList.remove('scrolled');
+                mimiLOGO.classList.remove('scrolled');
+                flexChange.classList.remove('scrolled');
+                redblockContainer.classList.remove('scrolled');
+            }
+
+            // 更新上一次滚动位置
+            lastScrollPosition = currentScrollPosition;
+        });
+
+        // 设置容器高度以确保有足够的滚动空间
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.container');
+            container.style.height = '120vh';
+        });
+
+
+        // ------------------------------------侧拉导航------------------------------------
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+            const body = document.body;
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+            // 打开侧边栏
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            });
+            // 关闭侧边栏的函数
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+            // 点击关闭按钮
+            closeBtn.addEventListener('click', closeSidebar);
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', closeSidebar);
+            // ESC键关闭
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

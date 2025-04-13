@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹理中轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            height: 120vh;
+        }
+
+        html {
+            font-size: 1.27vw;
+        }
+
+        .topset {
+            position: fixed;
+            width: 100vw;
+            z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            z-index: 999;
+        }
+
+        /* ----------------侧拉导航---------------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -12rem;
+            width: 12rem;
+            height: 100%;
+            background-color: rgba(253, 20, 50, 1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            left: -1.4rem;
+            top: 5.1rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            width: 5.5rem;
+        }
+
+        .menu-item {
+            text-decoration: none;
+            color: white;
+            /* 文字改为白色 */
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* 半透明白色悬停效果 */
+        }
+
+        /* 添加遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* ---------------page三级专属---------------- */
+        /*对应文字*/
+        .point-text {
+            width: 62vw;
+            height: 18rem;
+            display: flex;
+            justify-content: center;
+            margin: auto;
+            /* border-bottom: solid black 0.1rem; */
+        }
+        /*左侧hover红色*/
+        .image-wrapper {
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background-color: red;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .image-wrapper:hover::before,
+        .image-wrapper.active::before {
+            opacity: 1;
+            color: white;
+        }
+        
+        .image-wrapper:hover,
+        .image-wrapper.active {
+            transform: scale(1.05);
+            color: white;
+        }
+        
+
+        /* @media (max-width: 768px) {
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 20px;
+        gap: 20px;
+      }
+
+      #categories button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    } */
+    </style>
+</head>
+
+<body>
+    <!-- 导航 -->
+    <div class="topset">
+        <img style="height: 7rem;margin-left: 2rem;" src="/image/right-logo.png" alt="logo">
+        <img id="toggleSidebar" style="height: 1rem;margin: 2rem;cursor: pointer;" src="/image/tab.png" alt="logo">
+    </div>
+
+    <!-- 侧边导航栏 -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeSidebar"><img style="width: 3rem;" src="/image/btn-close.png"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu">
+                <img style="width: 7rem;" src="/image/tab-login.png">
+                <img style="width: 8rem;" src="/image/line.png">
+                <img src="/image/tab-AI.png">
+                <img src="/image/tab-guide.png">
+                <img src="/image/tab-online.png">
+                <img src="/image/tab-contact.png">
+            </div>
+        </div>
+    </div>
+
+    <!-- 名称文字等信息 -->
+    <div style="width: 100vw;z-index: 1;margin-bottom: 2rem">
+        <!-- 留白 -->
+        <div style="height: 7rem;width: 100vw"></div>
+        <!-- 名称标题 -->
+        <div style="display: flex;justify-content: center">
+            <img style="height: 3.5rem;" src="/category/Hexicaihua/detail/img3/16-title.png" alt="">
+        </div>
+        <!-- 留白 -->
+        <div style="height: 3rem;width: 100vw"></div>
+        <!-- 分类文字 -->
+        <div style="display: flex;justify-content: space-between;width: 55vw;margin:auto">
+            <p style="color: rgb(125, 125, 125);">16</p>
+            <p style="color: rgb(125, 125, 125);">⾦凤和玺</p>
+        </div>
+    </div>
+
+    <!-- 左右三七分区域 -->
+    <div style="width: 95vw;height: 36rem;display: flex;margin: auto;">
+        <!-- 3分 -->
+        <div style="width: 25%;">
+            <div class="image-wrapper" style="width: 90%;margin: 1rem;margin-top: 0rem;" data-src="/category/Hexicaihua/detail/img3/16-photo.jpg">
+                <div>图像</div>
+                <img style="width: 100%;" src="/category/Hexicaihua/detail/img3/16-photo.jpg">
+            </div>
+            <div class="image-wrapper" style="width: 90%;margin: 1rem;" data-src="/category/Hexicaihua/detail/img3/16-color.jpg">
+                <div>彩稿</div>
+                <img style="width: 100%;" src="/category/Hexicaihua/detail/img3/16-color.jpg">
+            </div>
+            <div class="image-wrapper" style="width: 90%;margin: 1rem" data-src="/category/Hexicaihua/detail/img3/16-line.jpg">
+                <div>线稿</div>
+                <img style="width: 100%;" src="/category/Hexicaihua/detail/img3/16-line.jpg">
+            </div>
+        </div>
+        <!-- 7分 -->
+        <div style="width: 75%;text-align:center">
+            <img id="large-image-display" style="width: 95%;" src="">
+        </div>
+    </div>
+
+    <br><br><br><br>
+    <div class="point-text">
+        <img src="/category/Hexicaihua/detail/img3/16-text.png">
+    </div>
+    <br> <br>
+
+
+
+    <script>
+        // ------------------------------------侧拉导航------------------------------------
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+            const body = document.body;
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+            // 打开侧边栏
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            });
+            // 关闭侧边栏的函数
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+            // 点击关闭按钮
+            closeBtn.addEventListener('click', closeSidebar);
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', closeSidebar);
+            // ESC键关闭
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
+        });
+        // ---------------------------------大图切换------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageWrappers = document.querySelectorAll('.image-wrapper');
+            const largeImage = document.getElementById('large-image-display');
+
+            imageWrappers.forEach(wrapper => {
+                wrapper.addEventListener('click', function() {
+                    // 移除所有图片的active状态
+                    imageWrappers.forEach(w => {
+                        w.classList.remove('active');
+                    });
+
+                    // 为当前点击的图片添加active状态
+                    this.classList.add('active');
+
+                    // 获取大图的src
+                    const largeSrc = this.dataset.src;
+
+                    // 显示大图
+                    largeImage.src = largeSrc;
+                    largeImage.classList.add('show');
+                });
+            });
+
+            // 默认显示第一张图
+            if (imageWrappers.length > 0) {
+                imageWrappers[0].click();
+            }
+        });
+    </script>
+</body>
+
+</html>

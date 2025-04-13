@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹理中轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            height: 120vh;
+        }
+
+        html {
+            font-size: 1.27vw;
+        }
+
+        .topset {
+            position: fixed;
+            width: 100vw;
+            z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            z-index: 999;
+        }
+
+        /* ----------------侧拉导航---------------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -12rem;
+            width: 12rem;
+            height: 100%;
+            background-color: rgba(253, 20, 50, 1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            left: -1.4rem;
+            top: 5.1rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            width: 5.5rem;
+        }
+
+        .menu-item {
+            text-decoration: none;
+            color: white;
+            /* 文字改为白色 */
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* 半透明白色悬停效果 */
+        }
+
+        /* 添加遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* @media (max-width: 768px) {
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 20px;
+        gap: 20px;
+      }
+
+      #categories button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    } */
+    </style>
+</head>
+
+<body>
+    <!-- 导航 -->
+    <div class="topset">
+        <img style="height: 5rem;margin-left: 2rem;" src="/image/right-logo.png" alt="logo">
+        <img id="toggleSidebar" style="height: 1rem;margin: 2rem;cursor: pointer;" src="/image/tab.png" alt="logo">
+    </div>
+
+    <!-- 侧边导航栏 -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeSidebar"><img style="width: 3rem;" src="/image/btn-close.png"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu">
+                <img style="width: 7rem;" src="/image/tab-login.png">
+                <img style="width: 8rem;" src="/image/line.png">
+                <a class="sidebar-menu" href="/menu/motifsAI.html" target="_blank"><img src="/image/tab-AI.png"></a>
+                <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-guide.png"></a>
+                <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-online.png"></a>
+                <a class="sidebar-menu" href="/menu/contact.html" target="_blank"><img src="/image/tab-contact.png"></a>
+                <a class="sidebar-menu" href="/menu/photography.html" target="_blank"><img
+                        src="/image/tab-photo.png"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 联系我们｜Contact-->
+    <div style="height: 7rem;width: 100vw"></div> <!-- 留白 -->
+    <p style="padding-left: 8rem;font-size:1.6rem;font-weight: 200;">联系我们 ｜ Contact</p>
+
+    <!-- 公告 -->
+    <div
+        style="margin: 3rem;margin-left: 8rem;margin-right: 8rem;height: 27rem;border: 0.1rem solid rgb(223, 223, 223);">
+        <div style="display: flex;">
+            <div style="margin: 1rem;height: 1.3rem;width: 0.2rem;background-color: red;"></div>
+            <div style="margin: 1rem;margin-left: 0.1rem;height: 1.3rem;">召集公告</div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+            <p style="text-align:center ;font-size: 1.5rem;">图库全民共建计划</p>
+            <p style="text-align:center ;font-size: 1rem;font-weight: 400;padding: 0.3rem;">——用镜头丈量历史，让纹样焕发新生</p>
+            <p style="text-indent: 2em;margin: 2rem;margin-bottom: 0rem;font-size: 1rem;font-weight: 400;">
+                您镜头里定格的每一道砖雕纹饰、脊兽图腾、宫门铺首，都将成为激活历史记忆的数智基因！目前图库搭建起步阶段，无论您是专业摄影师还是随拍爱好者，欢迎作为“供图者”加入我们实践共创的行列。您的每张照片都将成为AI纹样识别系统训练样本、参与生成中轴线数字孪生模型、助力世界文化遗产新视觉呈现！
+            </p>
+            <p
+                style="text-indent: 2em;margin-left: 2rem;margin-right: 2rem;font-size: 1rem;font-weight: 400;color: red;">
+                期待您的参与，邮箱地址：wenlizhongzhou2025@163.com。</p>
+        </div>
+
+        <div>
+            <div style="display: flex;align-items: center;margin: 2rem;margin-bottom: 0rem;">
+                <div style="width:0.7rem; height:0.7rem; background-color: red;border-radius: 100%;"></div>
+                <p style="font-size: 1rem;font-weight: 400;">「您的镜头价值连城」</p>
+            </div>
+            <p style="margin: 2rem;margin-bottom: 0rem;margin-top: 0rem;;font-size: 1rem;font-weight: 400;">
+                重点征集：中轴线建筑屋脊兽纹/门窗棂花/砖石雕刻/瓷绘图案等清晰纹样</p>
+            <p style="margin: 2rem;margin-bottom: 0rem;margin-top: 0rem;;font-size: 1rem;font-weight: 400;">
+                技术标准：JPEG/RAW格式，分辨率≥300dpi</p>
+            <p style="margin: 2rem;margin-bottom: 0rem;margin-top: 0rem;;font-size: 1rem;font-weight: 400;">
+                命名建议：搭配文物编码牌拍摄（如：彩绘-太和殿-鸱吻）</p>
+        </div>
+    </div>
+
+
+    <div style="display: flex;justify-content: space-between;margin: 3rem;margin-left: 8rem;margin-right: 8rem;">
+        <!-- 介绍hccd -->
+        <div style="width: 28rem;">
+            <img style="height: 2.5rem;" src="/image/logo2.png" alt="hccddiv">
+            <p style="padding-top: 2rem;padding-bottom: 1rem;">团队简介</p>
+            <p style="height: 8rem;font-size: 0.8rem;font-weight: 200;">
+                HCCD团队以文化遗产基因解码为核心使命，关注遗产、文化、设计、创新的隐性多边发展，致力于跨学科融合，聚焦传统文化的数字化传承与当代应用。团队成员来自中央美术学院设计学院，在设计教学、科研和社会服务等领域取得一定成果。近年来，团队专注研究凝结中国智慧的纹样基因，尝试经由数智化转译重新注入当代跨媒介传播场域，搭建起连接文化遗产保护与数字创意的桥梁。
+            </p>
+            <p style="padding-top: 2rem;padding-bottom: 1rem;">团队成员</p>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;">潘镜如</p>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;">燕 阳 王雪童 周彩霞 董小荷</p>
+            <br>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;"><span
+                    style="font-weight: 400;">邮箱：</span>hccdstudio123@gmail.com</p>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;"><span
+                    style="font-weight: 400;">地址：</span>北京市朝阳区花家地南街8号</p>
+            <br>
+            <div style="display: flex;align-items: center;">
+                <img style="height: 3rem;margin-right: 1rem;" src="/image/wxhccd.jpg" alt="wxdiv">
+                <div style="display: flex;flex-direction: column;">
+                    <p style="font-size: 0.8rem;">微信公众号</p>
+                    <p style="font-size: 0.8rem;font-weight: 200;padding-top: 0.7rem;">一脉 HCCD</p>
+                </div>
+            </div>
+            <br><br>
+        </div>
+
+        <!-- 介绍div -->
+        <div style="width: 28rem;">
+            <img style="height: 2.5rem;" src="/image/logo1.png" alt="div">
+            <p style="padding-top: 2rem;padding-bottom: 1rem;">团队简介</p>
+            <p style="height: 8rem;font-size: 0.8rem;font-weight: 200;">DIV
+                Lab隶属于北京理工大学设计与艺术学院工业制造艺术创新工信部重点实验室，是一个集科研、教研于一体的创新研发团队。研究组聚焦于全民健康与公共卫生，专注数据驱动型设计、人工智能设计创新与智能产品原型开发，在相关领域主持多项国家级、省部级、国际合作研究课题，科研成果长期在智能设计及人机交互领域的顶刊顶会中发表。教研方面，研究组与多家顶尖科技企业及设计公司合作，构建“产学研创”一体化人才培养模式，研发创新课程体系及教学方式，满足数智时代设计专业人才需求。
+            </p>
+            <p style="padding-top: 2rem;padding-bottom: 1rem;">团队成员</p>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;">任熹培</p>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;">王南轶 孙小晴 袁玉倩 王子一 荣远方 孙铭阳</p>
+            <br>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;"><span
+                    style="font-weight: 400;">邮箱：</span>DIVLab@126.com</p>
+            <p style="font-size: 0.8rem;font-weight: 200;padding-bottom: 1rem;"><span
+                    style="font-weight: 400;">地址：</span>北京理工大学良乡校区</p>
+            <br>
+            <div style="display: flex;align-items: center;">
+                <img style="height: 3rem;margin-right: 1rem;" src="/image/wxdiv.jpg" alt="wxdiv">
+
+                <div style="display: flex;flex-direction: column;">
+                    <p style="font-size: 0.8rem;">微信公众号</p>
+                    <p style="font-size: 0.8rem;font-weight: 200;padding-top: 0.7rem;">DIV lab 智能与健康设计</p>
+                </div>
+
+                <div style="margin-left: 2rem;display: flex;flex-direction: column;">
+                    <p style="font-size: 0.8rem;">BIT·智能与健康设计课题组</p>
+                    <p style="font-size: 0.8rem;font-weight: 200;padding-top: 0.7rem;">https://divlab.design/</p>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+
+
+    <script>
+        // ------------------------------------侧拉导航------------------------------------
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+            const body = document.body;
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+            // 打开侧边栏
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            });
+            // 关闭侧边栏的函数
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+            // 点击关闭按钮
+            closeBtn.addEventListener('click', closeSidebar);
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', closeSidebar);
+            // ESC键关闭
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
