@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹理中轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            /* 此页改成无纵向滚动了 */
+            height: 100vh;
+            background-color: #F7F7F7;
+        }
+
+        html {
+            font-size: 1.27vw;
+        }
+
+        .topset {
+            position: fixed;
+            width: 100vw;
+            z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            z-index: 999;
+        }
+
+        /* ----------------侧拉导航---------------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -12rem;
+            width: 12rem;
+            height: 100%;
+            background-color: rgba(253, 20, 50, 1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            left: -1.4rem;
+            top: 5.1rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            width: 5.5rem;
+        }
+
+        .menu-item {
+            text-decoration: none;
+            color: white;
+            /* 文字改为白色 */
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* 半透明白色悬停效果 */
+        }
+
+        /* 左侧10张图效果 */
+        .test-img {
+            cursor: pointer;
+        }
+        .test-img:hover{
+            transform: scale(1.05);
+            transition: transform 0.6s ease;
+        }
+
+        /* 添加遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /*三块横向*/
+        .test-img {
+            width: 5.5rem;
+            border-radius: 0.7rem;
+            margin: 0.5rem;
+        }
+
+        .btn-download {
+            background-color: red;
+            border: 0;
+            margin: 1rem;
+            padding: 0.4rem;
+            border-radius: 2rem;
+            color: #ffffff;
+            margin-top: auto;
+            margin-bottom: 2rem;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* 添加阴影 */
+            text-align: center;
+        }
+
+        /* @media (max-width: 768px) {
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 20px;
+        gap: 20px;
+      }
+
+      #categories button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    } */
+    </style>
+</head>
+
+<body>
+    <!-- 导航 -->
+    <div class="topset">
+        <img style="height: 5rem;margin-left: 2rem;" src="/image/right-logo.png" alt="logo">
+        <img id="toggleSidebar" style="height: 1rem;margin: 2rem;cursor: pointer;" src="/image/tab.png" alt="logo">
+    </div>
+
+        <!-- 侧边导航栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="close-btn" id="closeSidebar"><img style="width: 3rem;" src="/image/btn-close.png"></div>
+            <div class="sidebar-content">
+                <div class="sidebar-menu">
+                    <img style="width: 7rem;" src="/image/tab-login.png">
+                    <img style="width: 8rem;" src="/image/line.png">
+                    <a class="sidebar-menu" href="/menu/motifsAI.html" target="_blank"><img src="/image/tab-AI.png"></a>
+                    <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-guide.png"></a>
+                    <a class="sidebar-menu" href="/menu/corpus.html" target="_blank"><img src="/image/tab-corpus.png"></a>
+                    <a class="sidebar-menu" href="/menu/photography.html" target="_blank"><img src="/image/tab-photo.png"></a> 
+                    <a class="sidebar-menu" href="/menu/online.html" target="_blank"><img src="/image/tab-online.png"></a>
+                    <a class="sidebar-menu" href="/menu/contact.html" target="_blank"><img src="/image/tab-contact.png"></a>
+                </div>
+            </div>
+        </div>
+
+    <!-- 模板上传 ｜ Template Upload-->
+    <div style="height: 7rem;width: 100vw;background-color: #ffffff;"></div> <!-- 留白 -->
+    <p style="padding-left: 8rem;font-size:1.6rem;font-weight: 200;background-color: #ffffff;padding-bottom: 1rem;">纹样
+        AI ｜ Motifs AI</p>
+    <br>
+    <!-- 三块横向 -->
+    <div style="display: flex;justify-content: center;width: 100vw;gap: 1.5rem;">
+        <!-- 第一块 -->
+        <div
+            style="display: flex;flex-direction: column;width: 20%;padding: 0.5rem 1rem;border-radius: 0.5rem;background-color: #ffffff;">
+            <!-- 小标题 -->
+            <div style="display: flex;background-color: #ffffff;">
+                <div style="margin: 1rem;height: 1.3rem;width: 0.2rem;background-color: red;"></div>
+                <div style="margin: 1rem;margin-left: 0.1rem;height: 1.3rem;background-color: #ffffff;">测试图片</div>
+            </div>
+            <!-- 测试图片 -->
+            <div style="display: flex;background-color: #ffffff;justify-content: center;">
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result1.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test1.jpg" alt="test">
+                </div>
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result2.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test2.jpg" alt="test">
+                </div>
+            </div>
+            
+            <div style="display: flex;background-color: #ffffff;justify-content: center;">
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result3.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test3.jpg" alt="test">
+                </div>
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result4.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test4.jpg" alt="test">
+                </div>
+            </div>
+
+            <div style="display: flex;background-color: #ffffff;justify-content: center;">
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result5.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test5.jpg" alt="test">
+                </div>
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result6.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test6.jpg" alt="test">
+                </div>
+            </div>
+            
+            <div style="display: flex;background-color: #ffffff;justify-content: center;">
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result7.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test7.jpg" alt="test">
+                </div>
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result8.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test8.jpg" alt="test">
+                </div>
+            </div>
+
+            <div style="display: flex;background-color: #ffffff;justify-content: center;">
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result9.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test9.jpg" alt="test">
+                </div>
+                <div class="image-wrapper" style="background-color: #ffffff;" data-src="/menu/mAI/3/result10.jpg">
+                    <img class="test-img" src="/menu/mAI/3/test10.jpg" alt="test">
+                </div>
+            </div>
+        </div>
+
+        <!-- 第2块 -->
+        <div
+            style="display: flex;flex-direction: column;width: 45%;padding: 0.5rem 1rem;border-radius: 0.5rem;background-color: #ffffff;">
+            <!-- 小标题 -->
+            <div style="display: flex;background-color: #ffffff;">
+                <div style="margin: 1rem;height: 1.3rem;width: 0.2rem;background-color: red;"></div>
+                <div style="margin: 1rem;margin-left: 0.1rem;height: 1.3rem;background-color: #ffffff;">推理结果</div>
+            </div>
+            <!-- 推理图片 -->
+            <div style="display: flex;justify-content: center;padding: 3rem;background-color: #F7F7F7">
+                <img id="large-image-display" style="width: 25rem;padding: 2rem;" src="" alt="test">
+            </div>
+        </div>
+
+        <!-- 第3块 -->
+        <div
+            style="display: flex;flex-direction: column;width: 16%;padding: 0.5rem 1rem;border-radius: 0.5rem;background-color: #ffffff;">
+            <!-- 小标题 -->
+            <div style="display: flex;background-color: #ffffff;">
+                <div style="margin: 1rem;height: 1.3rem;width: 0.2rem;background-color: red;"></div>
+                <div style="margin: 1rem;margin-left: 0.1rem;height: 1.3rem;background-color: #ffffff;">纹样解析</div>
+            </div>
+            <!-- 其他 -->
+            <div style="margin: 1rem;background-color: #ffffff;">
+                <p style="font-size: 0.9rem;background-color: #ffffff;">葫芦纹</p><br>
+                <p style="font-size: 0.8rem;font-weight: 300;background-color: #ffffff;">葫芦藤蔓绵延，结果累累，籽粒繁多，被视为祈求子孙万代的吉祥物。葫芦还是道士的随身宝物，里面往往装着他的神药或其他法宝。
+                </p>
+            </div>
+            <!-- <div style="height: 1px;margin: 1rem;background-color: rgb(187, 187, 187);"></div>
+            <div style="margin: 1rem;background-color: #ffffff;">
+                <p style="font-size: 0.9rem;background-color: #ffffff;">标题</p><br>
+                <p style="font-size: 0.8rem;font-weight: 300;background-color: #ffffff;">段落段落段落段落段落段落段落段落段落段落段落段落段落段落段落
+                </p>
+            </div> -->
+            <!-- 按钮 -->
+            <button onclick="copyURL()" class="btn-download">复制URL</button>
+        </div>
+
+    </div>
+    <br>
+
+
+    <script>
+        // ---------------------------------大图切换------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageWrappers = document.querySelectorAll('.image-wrapper');
+            const largeImage = document.getElementById('large-image-display');
+
+            imageWrappers.forEach(wrapper => {
+                wrapper.addEventListener('click', function () {
+                    // 移除所有图片的active状态
+                    imageWrappers.forEach(w => {
+                        w.classList.remove('active');
+                    });
+
+                    // 为当前点击的图片添加active状态
+                    this.classList.add('active');
+
+                    // 获取大图的src
+                    const largeSrc = this.dataset.src;
+
+                    // 显示大图
+                    largeImage.src = largeSrc;
+                    largeImage.classList.add('show');
+                });
+            });
+
+            // 默认显示第一张图
+            if (imageWrappers.length > 0) {
+                imageWrappers[0].click();
+            }
+        });
+
+        // ------------------------------------复制URL------------------------------------
+        function copyURL() {
+            const urlToCopy = "ZW1iZWRkaW5nL2Nsb3VkX3RyYWluL2QyZWUzZjQ0ZTFjYjY1MGE5OTlkMjJmMWQ2ZmZhMWFlLzcyZjYzMmI2OWM2ODRiYjQ4Y2MxZGU5Y2M4MTY5YjczL3Byb21wdC5lbWJlZGRpbmc="; // 指定要复制的URL
+            navigator.clipboard.writeText(urlToCopy).then(() => {
+                alert("已复制到剪贴板！");
+            }).catch(err => {
+                console.error("复制失败：", err);
+            });
+        }
+        // ------------------------------------侧拉导航------------------------------------
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+            const body = document.body;
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+            // 打开侧边栏
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            });
+            // 关闭侧边栏的函数
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+            // 点击关闭按钮
+            closeBtn.addEventListener('click', closeSidebar);
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', closeSidebar);
+            // ESC键关闭
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
