@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹理中轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            height: 120vh;
+        }
+
+        html {
+            font-size: 1.27vw;
+        }
+
+        .topset {
+            position: fixed;
+            width: 100vw;
+            z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            z-index: 999;
+        }
+
+        /* ----------------侧拉导航---------------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -12rem;
+            width: 12rem;
+            height: 100%;
+            background-color: rgba(253, 20, 50, 1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .sidebar.active {
+            right: 0;
+            opacity: 1;
+        }
+
+        .sidebar-content {
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            left: -1.4rem;
+            top: 5.1rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            width: 5.5rem;
+        }
+
+        .menu-item {
+            text-decoration: none;
+            color: white;
+            /* 文字改为白色 */
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            /* 半透明白色悬停效果 */
+        }
+
+        /* 添加遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .p-photography {
+            cursor: pointer;
+        }
+
+        #hover-image-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            /* 设置宽度为视口宽度的70% */
+            aspect-ratio: 1 / 1;
+            /* 保持宽高比为1:1 */
+            background-size: contain;
+            /* 确保图片按原始比例显示 */
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        /* @media (max-width: 768px) {
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 20px;
+        gap: 20px;
+      }
+
+      #categories button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    } */
+    </style>
+</head>
+
+<body>
+    <!-- 导航 -->
+    <div class="topset">
+        <img style="height: 5rem;margin-left: 2rem;" src="/image/right-logo.png" alt="logo">
+        <img id="toggleSidebar" style="height: 1rem;margin: 2rem;cursor: pointer;" src="/image/tab.png" alt="logo">
+    </div>
+
+    <!-- 侧边导航栏 -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeSidebar"><img style="width: 3rem;" src="/image/btn-close.png"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu">
+                <img style="width: 7rem;" src="/image/tab-login.png">
+                <img style="width: 8rem;" src="/image/line.png">
+                <a class="sidebar-menu" href="/menu/motifsAI.html" target="_blank"><img src="/image/tab-AI.png"></a>
+                <a class="sidebar-menu" href="/menu/upload.html" target="_blank"><img src="/image/tab-guide.png"></a>
+                <a class="sidebar-menu" href="/menu/corpus.html" target="_blank"><img src="/image/tab-corpus.png"></a>
+                <a class="sidebar-menu" href="/menu/photography.html" target="_blank"><img
+                        src="/image/tab-photo.png"></a>
+                <a class="sidebar-menu" href="/menu/online.html" target="_blank"><img src="/image/tab-online.png"></a>
+                <a class="sidebar-menu" href="/menu/contact.html" target="_blank"><img src="/image/tab-contact.png"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photographic Collective  -->
+    <div style="height: 5rem;width: 100vw"></div> <!-- 留白 -->
+    <p style="font-size:3rem;font-weight:bolder;text-align: center;">Photographic Collective</p>
+    <br>
+    <!-- 大容器 -->
+    <div style="display: flex; flex-direction: column; width: 90vw; margin: auto;">
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R1.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P1.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R2.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P2.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R3.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 40%;" src="/menu/photography/P3.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P4.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R4.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P5.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P6.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/P7.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R5.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P8.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R6.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P9.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R7.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P10.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R8.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P11.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R9.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 40%;" src="/menu/photography/P12.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P13.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R10.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P14.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P15.jpg" alt="photo">
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R11.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P16.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R12.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P17.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R13.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/P18.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R14.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P19.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R15.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P20.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P21.jpg" alt="photo">
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R16.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P22.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R17.jpg" alt="photo">
+            <img style="width: 40%;" src="/menu/photography/P23.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 40%;" src="/menu/photography/P24.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P25.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R18.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P26.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P27.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R19.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P28.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R20.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P29.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R21.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 40%;" src="/menu/photography/P30.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P31.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R22.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P32.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P33.jpg" alt="photo">
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R23.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P34.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R24.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P35.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R25.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 40%;" src="/menu/photography/P36.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P37.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R26.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P38.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/P39.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R27.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P40.jpg" alt="photo">
+            <img style="width: 40%;" src="/menu/photography/P41.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P42.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R28.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P43.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R29.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P44.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R30.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/P45.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R31.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P46.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R32.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P47.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 40%;" src="/menu/photography/P48.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R33.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R34.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P49.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P50.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/R35.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P51.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R36.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P52.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R37.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 20%;" src="/menu/photography/P53.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R38.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P54.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/R39.jpg" alt="photo">
+            <img style="width: 20%;" src="/menu/photography/P55.jpg" alt="photo">
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <img style="width: 100%;" src="/menu/photography/P56.jpg" alt="photo">
+        </div>
+    </div>
+
+    <!-- 隐藏的大图容器 -->
+    <div id="hover-image-container"></div>
+
+    <script>
+        // ------------------------------------大容器------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const photos = document.querySelectorAll('.p-photography');
+            const hoverImageContainer = document.getElementById('hover-image-container');
+
+            photos.forEach(photo => {
+                photo.addEventListener('mouseenter', () => {
+                    const hoverSrc = photo.getAttribute('data-hover-src');
+                    hoverImageContainer.style.backgroundImage = `url('${hoverSrc}')`;
+                    hoverImageContainer.style.display = 'block';
+                    hoverImageContainer.style.opacity = 1;
+                });
+            });
+
+            // 监听大图容器的鼠标事件，确保鼠标在大图上移动时不会隐藏
+            hoverImageContainer.addEventListener('mouseenter', () => {
+                hoverImageContainer.style.opacity = 1;
+            });
+
+            hoverImageContainer.addEventListener('mouseleave', () => {
+                hoverImageContainer.style.opacity = 0;
+                setTimeout(() => {
+                    hoverImageContainer.style.display = 'none';
+                }, 300); // 等待动画结束后隐藏
+            });
+        });
+        // ------------------------------------侧拉导航------------------------------------
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+            const body = document.body;
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+            // 打开侧边栏
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            });
+            // 关闭侧边栏的函数
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+            // 点击关闭按钮
+            closeBtn.addEventListener('click', closeSidebar);
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', closeSidebar);
+            // ESC键关闭
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
